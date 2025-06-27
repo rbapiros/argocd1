@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocdvm
+  namespace: openshift-gitops  # Argo CD’s namespace
+spec:
+  project: default
+
+  source:
+    repoURL: 'https://github.com/rbapiros/argocd1.git'  # 👈 Your Git repo
+    targetRevision: main  # or another branch
+    path: apps/dev        # 👈 points to your overlay
+
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: linux-vm      # 👈 Namespace to deploy the VM into (create if needed)
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+
